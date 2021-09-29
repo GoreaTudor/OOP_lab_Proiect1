@@ -1,5 +1,6 @@
 package Game;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Gameplay {
@@ -52,5 +53,67 @@ public class Gameplay {
         this.enemy = new Enemy(difficulty);
     }
 
+    public void gameMenu(){
+        System.out.println("A new enemy arrived");
+        boolean ok = true;
+        boolean valid;
 
+        while (enemy.isAlive() && player.isAlive() && ok){
+            System.out.println("Stats:");
+            System.out.println("Player HP: ");
+
+            System.out.println("Please choose an action:");
+            System.out.println("a - attack");
+            System.out.println("d - defend");
+            System.out.println("0 - exit");
+
+            Scanner input = new Scanner(System.in);
+            System.out.print("Your option: ");
+            String s = input.next();
+            Options playerOption = Options.none;
+            valid = true;
+
+            switch (s) {
+                case "a":
+                    playerOption = Options.attack;
+                    break;
+                case "d":
+                    playerOption = Options.defend;
+                    break;
+                case "0":
+                    playerOption = Options.none;
+                    ok = false;
+                    break;
+                default:
+                    playerOption = Options.none;
+                    System.out.println("Invalid input!");
+                    valid = false;
+            }
+
+            if (valid) {
+                Random rnd = new Random();
+                Options enemyOption;
+
+                int opt = rnd.nextInt(2);
+
+                if(opt == 1)
+                    enemyOption = Options.attack;
+                else
+                    enemyOption = Options.defend;
+
+
+                if (playerOption == Options.attack && enemyOption == Options.attack) {
+                    ;
+                } else if (playerOption == Options.defend && enemyOption == Options.attack) {
+                    ;
+                } else if (playerOption == Options.attack && enemyOption == Options.defend) {
+                    ;
+                } else if (playerOption == Options.defend && enemyOption == Options.defend) {
+                    ;
+                }
+
+            }
+
+        }
+    }
 }

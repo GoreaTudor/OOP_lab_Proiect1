@@ -1,5 +1,5 @@
 package Game;
 
 public enum Options {
-    defend, attack
+    defend, attack, none
 }
