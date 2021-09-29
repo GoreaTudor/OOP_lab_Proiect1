@@ -43,4 +43,11 @@ public class Enemy {
     public void setBaseDMG(double baseDMG) {
         this.baseDMG = baseDMG;
     }
+
+    public double getCurrentHP() {
+        return currentHP;
+    }
+    public void resetCurrentHP() {
+        this.currentHP = this.baseHP;
+    }
 }

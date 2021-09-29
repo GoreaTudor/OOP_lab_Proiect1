@@ -60,7 +60,8 @@ public class Gameplay {
 
         while (enemy.isAlive() && player.isAlive() && ok){
             System.out.println("Stats:");
-            System.out.println("Player HP: ");
+            System.out.println("Player HP: " + player.getHp());
+            System.out.println("Enemy HP:" + enemy.getCurrentHP());
 
             System.out.println("Please choose an action:");
             System.out.println("a - attack");
