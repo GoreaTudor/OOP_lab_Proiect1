@@ -1,25 +1,49 @@
 package Game;
 
 public class Player {
-    private double hp;
+    private double baseHP;
+    private double currentHP;
     private double dmg;
     private int score;
 
     Player () {
-        this.hp = 10;
+        this.baseHP = 10;
+        this.currentHP = this.baseHP;
         this.dmg = 4;
         this.score = 0;
     }
 
     public boolean isAlive(){
-        return (this.hp > 0);
+        return (this.currentHP > 0);
+    }
+    public void upgrade() {
+        if(this.getBaseHP() < 15 && this.getDmg() < 9) {
+            this.setBaseHP(this.getBaseHP() + 1);
+            this.setDmg(this.getDmg() + 1);
+        }
     }
 
-    public double getHp() {
-        return hp;
+    public double getBaseHP() {
+        return baseHP;
     }
-    public void setHp(double hp) {
-        this.hp = hp;
+    public void setBaseHP(double baseHP) {
+        this.baseHP = baseHP;
+    }
+
+    public double getCurrentHP() {
+        return currentHP;
+    }
+    public void setCurrentHP(double currentHP) {
+        this.currentHP = currentHP;
+    }
+    public void resetCurrentHP() {
+        this.currentHP = this.baseHP;
+    }
+    public void incCurrentHP(){
+        if(this.currentHP + 0.5 <= this.baseHP)
+            this.currentHP += 0.5;
+        else
+            this.currentHP = this.baseHP;
     }
 
     public double getDmg() {
@@ -34,6 +58,10 @@ public class Player {
     }
     public void incScore() {
         this.score ++;
+    }
+    public void decScore() {
+        if(this.score > 0)
+            this.score --;
     }
     public void resetScore() {
         this.score = 0;

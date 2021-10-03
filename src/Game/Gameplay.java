@@ -51,70 +51,141 @@ public class Gameplay {
 
         this.player = new Player();
         this.enemy = new Enemy(difficulty);
+
+        player.resetScore();
+        System.out.println("\n");
     }
 
     public void gameMenu(){
-        System.out.println("A new enemy arrived");
-        boolean ok = true;
-        boolean valid;
+        Scanner input = new Scanner(System.in);
+        Options playerOption;
+        Options enemyOption;
+        boolean validInput;
+        boolean ok;
+        Random rnd;
+        String s;
+        int opt;
 
-        while (enemy.isAlive() && player.isAlive() && ok){
-            System.out.println("Stats:");
-            System.out.println("Player HP: " + player.getHp());
-            System.out.println("Enemy HP:" + enemy.getCurrentHP());
+        while (true) {
+            System.out.println("A new enemy arrived");
+            enemy.resetCurrentHP();
+            player.resetCurrentHP();
+            ok = true;
 
-            System.out.println("Please choose an action:");
-            System.out.println("a - attack");
-            System.out.println("d - defend");
-            System.out.println("0 - exit");
+            while (enemy.isAlive() && player.isAlive() && ok) {
+                System.out.println("\nStats:");
+                System.out.println("    Score: " + player.getScore());
+                System.out.println("    Player HP: " + player.getCurrentHP() + " <-");
+                System.out.println("    Enemy HP: " + enemy.getCurrentHP());
 
-            Scanner input = new Scanner(System.in);
-            System.out.print("Your option: ");
-            String s = input.next();
-            Options playerOption = Options.none;
-            valid = true;
+                System.out.println("\nPlease choose an action:");
+                System.out.println("(a)ttack  /  (d)efend  /  (r)un  /  (0) exit");
 
-            switch (s) {
-                case "a":
-                    playerOption = Options.attack;
-                    break;
-                case "d":
-                    playerOption = Options.defend;
-                    break;
-                case "0":
-                    playerOption = Options.none;
-                    ok = false;
-                    break;
-                default:
-                    playerOption = Options.none;
-                    System.out.println("Invalid input!");
-                    valid = false;
+                System.out.print("Your option: ");
+                s = input.next();
+                playerOption = Options.none;
+                validInput = true;
+
+                switch (s) {
+                    case "a":
+                        System.out.println("Player choice: ATTACK");
+                        playerOption = Options.attack;
+                        break;
+
+                    case "d":
+                        System.out.println("Player choice: DEFEND");
+                        playerOption = Options.defend;
+                        break;
+
+                    case "r":
+                        System.out.println("Player choice: RUN");
+                        playerOption = Options.none;
+                        ok = false;
+                        break;
+
+                    case "0":
+                        System.out.println("Player choice: EXIT");
+                        playerOption = Options.none;
+                        return;
+
+                    default:
+                        playerOption = Options.none;
+                        System.out.println("Invalid input!");
+                        validInput = false;
+                } // switch case
+
+                if (validInput) {
+                    rnd = new Random();
+
+                    opt = rnd.nextInt(2);
+                    if (opt == 1) {
+                        System.out.println("Enemy choice: ATTACK");
+                        enemyOption = Options.attack;
+                    } else {
+                        System.out.println("Enemy choice: DEFEND");
+                        enemyOption = Options.defend;
+                    }
+
+
+                    if (playerOption == Options.defend && enemyOption == Options.defend) {
+                        player.incCurrentHP();
+                        enemy.incCurrentHP();
+
+                    } else if (playerOption == Options.defend && enemyOption == Options.attack) {
+                        player.setCurrentHP(player.getCurrentHP() - (enemy.getBaseDMG() / 2.0));
+
+                    } else if (playerOption == Options.attack && enemyOption == Options.defend) {
+                        enemy.setCurrentHP(enemy.getCurrentHP() - (player.getDmg() / 2.0));
+
+                    } else if (playerOption == Options.attack && enemyOption == Options.attack) {
+                        player.setCurrentHP(player.getCurrentHP() - enemy.getBaseDMG());
+                        enemy.setCurrentHP(enemy.getCurrentHP() - player.getDmg());
+                    }
+
+                } // if validInput
+            } // while player.isAlive && enemy.isAlive && ok
+
+
+            System.out.println("\n");
+            if(!player.isAlive() && !enemy.isAlive()) { // both died
+                System.out.println("TIE - This battle left no one alive");
+
+                System.out.println("Do you want to try again?");
+                System.out.println("Press Y to continue, press any other key to exit...");
+                System.out.print("-> ");
+                s = input.next();
+                if (s.contentEquals("y") == false)
+                    return;
+
+            } else if(!player.isAlive()) { // player died
+                System.out.println("MISSION FAILED - we'll get em next time.");
+                player.resetScore();
+
+                System.out.println("Do you want to try again?");
+                System.out.println("Press Y to continue, press any other key to exit...");
+                System.out.print("-> ");
+                s = input.next();
+                if (s.contentEquals("y") == false)
+                    return;
+
+            } else if (!enemy.isAlive()) { // enemy died
+                System.out.println("VICTORY! - You are a beast!");
+                player.incScore();
+
+            } else { // player ran
+                System.out.println("UNWORTHY - you ran from the enemy.");
+                player.incCurrentHP();
+                player.decScore(); //this is used for punishment
             }
 
-            if (valid) {
-                Random rnd = new Random();
-                Options enemyOption;
 
-                int opt = rnd.nextInt(2);
-
-                if(opt == 1)
-                    enemyOption = Options.attack;
-                else
-                    enemyOption = Options.defend;
-
-
-                if (playerOption == Options.attack && enemyOption == Options.attack) {
-                    ;
-                } else if (playerOption == Options.defend && enemyOption == Options.attack) {
-                    ;
-                } else if (playerOption == Options.attack && enemyOption == Options.defend) {
-                    ;
-                } else if (playerOption == Options.defend && enemyOption == Options.defend) {
-                    ;
-                }
-
+            if (player.getScore() > 0 && player.getScore() % 4 == 0) {
+                player.upgrade();
+                System.out.println("\nA new upgrade available!");
+                System.out.println("Base Health increased: " + player.getBaseHP());
+                System.out.println("Damage increased: " + player.getDmg());
             }
 
-        }
+        } // main game
     }
 }

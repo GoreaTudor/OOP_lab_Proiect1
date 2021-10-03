@@ -8,26 +8,28 @@ public class Enemy {
     Enemy (Difficulty difficulty){
         switch (difficulty){
             case Easy:
-                this.baseHP = 9;
-                this.baseDMG = 3;
+                this.setBaseHP(8);
+                this.setBaseDMG(2);
                 break;
             case Medium:
-                this.baseHP = 10;
-                this.baseDMG = 4;
+                this.setBaseHP(9);
+                this.setBaseDMG(3);
                 break;
             case Hard:
-                this.baseHP = 11;
-                this.baseDMG = 4;
+                this.setBaseHP(10);
+                this.setBaseDMG(4);
                 break;
             case Impossible:
-                this.baseHP = 12;
-                this.baseDMG = 5;
+                this.setBaseHP(11);
+                this.setBaseDMG(5);
                 break;
         }
+
+        this.setCurrentHP(this.getBaseHP());
     }
 
     public boolean isAlive() {
-        return (this.baseHP > 0);
+        return (this.currentHP > 0);
     }
 
     public double getBaseHP() {
@@ -47,7 +49,16 @@ public class Enemy {
     public double getCurrentHP() {
         return currentHP;
     }
+    public void setCurrentHP(double currentHP) {
+        this.currentHP = currentHP;
+    }
     public void resetCurrentHP() {
         this.currentHP = this.baseHP;
+    }
+    public void incCurrentHP() {
+        if(this.currentHP + 0.5 <= this.baseHP)
+            this.currentHP += 0.5;
+        else
+            this.currentHP = this.baseHP;
     }
 }
